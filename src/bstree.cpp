@@ -77,6 +77,48 @@ bool BSTree<T>::insert_at( const T &content, Node<T> *ptr ){
             return insert_at(content, ptr->right);
         }
     }
-
     return true;
+};
+
+// Pre Order, In Order, Pos Order,
+template <class T>
+void BSTree<T>::pre_order(){
+    this->pre_order(this->root);
+};
+template <class T>
+void BSTree<T>::pre_order(Node<T> *root){
+    if( root == nullptr ){
+        return;
+    };
+    std::cout << root->get_content() <<" ";
+    pre_order(root->left);
+    pre_order(root->right);
+};
+
+template <class T>
+void BSTree<T>::in_order(){
+    this->in_order(this->root);
+};
+template <class T>
+void BSTree<T>::in_order(Node<T> *root){
+    if( root == nullptr ){
+        return;
+    };
+    in_order(root->left);
+    std::cout << root->get_content() <<" ";
+    in_order(root->right);
+};
+
+template <class T>
+void BSTree<T>::pos_order(){
+    this->pos_order(this->root);
+};
+template <class T>
+void BSTree<T>::pos_order(Node<T> *root){
+    if( root == nullptr ){
+        return;
+    };
+    pos_order(root->left);
+    pos_order(root->right);
+    std::cout << root->get_content() <<" ";
 };

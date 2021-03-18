@@ -25,11 +25,20 @@ class BSTree{
         int size = 0;
 
         bool insert_at( const T &content, Node<T> *ptr );
+        
+        void pre_order(Node<T> *root);
+        void in_order(Node<T> *root);
+        void pos_order(Node<T> *root);
     public:
+        // Constructors & Destructors
         ~BSTree();
-
+        // 
         Node<T>* get_root();
         bool insert( T content );
+        // Pre Order, In Order, Pos Order,
+        void pre_order();
+        void in_order();
+        void pos_order();
 };
 
 #endif
