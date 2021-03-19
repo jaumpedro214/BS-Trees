@@ -5,16 +5,11 @@
 int main(){
     Node<int> no;
     BSTree<char> tree;
-    tree.insert('c');
-    tree.insert('d');
-    tree.insert('b');
-    tree.insert('a');
-    tree.insert('f');
-    tree.insert('z');
-    tree.pre_order();
-    std::cout << "\n";
-    tree.in_order();
-    std::cout << "\n";
-    tree.pos_order();
+    char elems[] = {'c','d','b','a','f','z','e','g'};
+    
+    for( char x: elems )
+        tree.insert(x);
+    
+    tree.print_hierarchy();
     return 0;
 }

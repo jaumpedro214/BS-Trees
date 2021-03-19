@@ -1,5 +1,4 @@
 #include "bstree.hpp"
-#include <iostream>
 
 
 // Node Class
@@ -32,7 +31,7 @@ Node<T>* BSTree<T>::get_root(){
     return this->root;
 };
 
-//      Insert & Remove
+//      Insert, Remove & Find
 template <class T> 
 bool BSTree<T>::insert( T content ){
     Node<T> *no = new Node<T>(content);
@@ -56,29 +55,67 @@ bool BSTree<T>::insert( T content ){
 template <class T>
 bool BSTree<T>::insert_at( const T &content, Node<T> *ptr ){
     
+    char inserted = 0;
     if( ptr->get_content() == content ){
         return false;
     }
     else if( ptr->get_content() > content ){
         if( ptr->left == nullptr ){
             ptr->left = new Node<T>(content);
-            return true;
+            inserted = -1;
         }
         else{
-            return insert_at(content, ptr->left);
+            if( insert_at(content, ptr->left) )
+                inserted = -1;
         }
     }
     else if( ptr->get_content() < content ){
         if( ptr->right == nullptr ){
             ptr->right = new Node<T>(content);
-            return true;
+            inserted = 1;
         }
         else{
-            return insert_at(content, ptr->right);
+            if( insert_at(content, ptr->right) )
+                inserted = 1;
         }
     }
-    return true;
+
+    // Updating tree height
+    if( inserted == -1 || inserted == 1 ){
+        if( ptr->right == nullptr )
+            ptr->height = ptr->left->height+1;
+        else if( ptr->left == nullptr )
+            ptr->height = ptr->right->height+1;
+        else
+            ptr->height = std::max(ptr->left->height, ptr->right->height)+1;
+        return true;
+    }
+
+    return false;
 };
+
+template <class T>
+Node<T>* BSTree<T>::find( T content ){
+    
+    if( this->root == nullptr )
+        return nullptr;
+
+    return this->find_at(content, this->root);
+}
+template <class T>
+Node<T>* BSTree<T>::find_at( const T &content, Node<T> *ptr){
+    
+    if( ptr == nullptr )
+        return nullptr;
+    
+    if( ptr->content > content )
+        return this->find_at(content, ptr->left);
+    else if( ptr->content < content )
+        return this->find_at(content, ptr->right);
+    
+    return ptr;
+}
+
 
 // Pre Order, In Order, Pos Order,
 template <class T>
@@ -121,4 +158,18 @@ void BSTree<T>::pos_order(Node<T> *root){
     pos_order(root->left);
     pos_order(root->right);
     std::cout << root->get_content() <<" ";
+};
+
+template <class T>
+void BSTree<T>::print_hierarchy(){
+    this->print_hierarchy(this->root, "");
+};
+template <class T>
+void BSTree<T>::print_hierarchy(Node<T> *root, std::string s ){
+    if( root == nullptr ){
+        return;
+    };
+    print_hierarchy(root->left, s+"  ");
+    std::cout << s << root->get_content() <<"("<<root->height<< ")\n";
+    print_hierarchy(root->right, s+"  ");
 };
