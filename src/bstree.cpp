@@ -22,7 +22,8 @@ template <class T> T Node<T>::get_content(){
 //      Constructors & Destructors
 template <class T> 
 BSTree<T>::~BSTree(){
-    delete this->root;
+    if( this->root!=nullptr )
+        delete this->root;
 };
 
 //      Geters & Seters
@@ -115,7 +116,120 @@ Node<T>* BSTree<T>::find_at( const T &content, Node<T> *ptr){
     
     return ptr;
 }
+//              Remove functions
+template <class T>
+bool BSTree<T>::remove( T content ){
+    // Delete if root
+    if( this->root->left == nullptr && this->root->right == nullptr ){
+        delete this->root;
+        this->root = nullptr;
+        this->size--;
+        return true;
+    }
+    return this->remove_at(content, this->root);
+}
+template <class T>
+bool BSTree<T>::remove_at( const T &content, Node<T> *ptr_fat ){
+    Node<T> *ptr = nullptr;
+    bool removed = false;
+    char son_direction = 0;
 
+    if( ptr_fat->content > content ){
+        if( ptr_fat->left == nullptr ){
+            removed = false;
+        }
+        else if( ptr_fat->left->content == content ){
+            ptr = ptr_fat->left;
+            son_direction = -1;
+            this->delete_node(ptr_fat, ptr, son_direction);
+            removed = true;
+        }
+        else{ 
+            removed = this->remove_at(content, ptr_fat->left);
+        }
+    }
+    else if( ptr_fat->content < content ){
+        if( ptr_fat->right == nullptr ){
+            removed = false;
+        }
+        else if( ptr_fat->right->content == content ){
+            ptr = ptr_fat->right;
+            son_direction = 1;
+            this->delete_node(ptr_fat, ptr, son_direction);
+            removed = true;
+        }
+        else{
+            removed = this->remove_at(content, ptr_fat->right);
+        }
+    }
+    else{
+        ptr = ptr_fat;
+        son_direction = 0;
+        this->delete_node(nullptr, ptr, son_direction);
+    }
+
+    return removed;
+}
+template <class T>
+void BSTree<T>::delete_node( Node<T> *ptr_fat, Node<T> *ptr, char son_direction ){
+    Node<T> *ptr_aux = nullptr, *ptr_aux_fat = nullptr;
+
+    // Remove Cases
+    //    Leaf Node
+    if( ptr->left==nullptr && ptr->right==nullptr  ){
+        delete ptr;
+        if( son_direction != 0 ){
+            if( son_direction == -1 )
+                ptr_fat->left = nullptr;
+            else
+                ptr_fat->right = nullptr;
+        }
+    }
+    else if( ptr->right != nullptr ){
+        ptr_aux_fat = ptr->right;//
+        ptr_aux = ptr_aux_fat->left;
+
+        if( ptr_aux == nullptr ){
+            ptr->content = ptr_aux_fat->content;
+            ptr->right = ptr_aux_fat->right;//
+            ptr_aux_fat->right = nullptr;//
+            delete ptr_aux_fat;
+        }
+        else{
+            while( ptr_aux->left != nullptr ){
+                ptr_aux_fat = ptr_aux;
+                ptr_aux = ptr_aux->left;
+            }
+            ptr->content = ptr_aux->content;
+            ptr_aux_fat->left = ptr_aux->right;//
+            ptr_aux->right = nullptr;//
+            delete ptr_aux;
+        }
+    }
+    else if( ptr->left != nullptr ){
+        ptr_aux_fat = ptr->left;//
+        ptr_aux = ptr_aux_fat->right;
+
+        if( ptr_aux == nullptr ){
+            ptr->content = ptr_aux_fat->content;
+            ptr->left = ptr_aux_fat->left;//
+            ptr_aux_fat->left = nullptr;//
+            delete ptr_aux_fat;
+        }
+        else{
+            while( ptr_aux->right != nullptr ){
+                ptr_aux_fat = ptr_aux;
+                ptr_aux = ptr_aux->right;
+            }
+
+            ptr->content = ptr_aux->content;
+            ptr_aux_fat->right = ptr_aux->left;//
+            ptr_aux->left = nullptr;//
+            delete ptr_aux;
+        }
+    }
+
+}
 
 // Pre Order, In Order, Pos Order,
 template <class T>

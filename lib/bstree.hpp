@@ -29,6 +29,8 @@ class BSTree{
         int size = 0;
 
         bool insert_at( const T &content, Node<T> *ptr );
+        bool remove_at( const T &content, Node<T> *ptr_fat );
+        void delete_node( Node<T> *ptr_fat, Node<T> *ptr, char son_direction );
         Node<T>* find_at(const T &content, Node<T> *ptr);
 
         void pre_order(Node<T> *root);
@@ -39,16 +41,17 @@ class BSTree{
     public:
         // Constructors & Destructors
         ~BSTree();
-        // 
         Node<T>* get_root();
+        // Insert, Remove & Find
         bool insert( T content );
+        bool remove( T content );
         Node<T>* find( T content );
 
         // Pre Order, In Order, Pos Order,
         void pre_order();
         void in_order();
         void pos_order();
-
+        
         // Function to print tree-like hierarchical structure
         void print_hierarchy();
 };
