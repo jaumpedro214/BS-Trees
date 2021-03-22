@@ -16,6 +16,22 @@ template <class T> Node<T>::~Node(){
 template <class T> T Node<T>::get_content(){
     return this->content;
 };
+//      Other methods
+template <class T> bool Node<T>::update_height(){
+    int prev_height = this->height;
+
+    if( this->left == nullptr && this->right == nullptr )
+        this->height = 0;
+    else if( this->right == nullptr )
+        this->height = this->left->height+1;
+    else if( this->left == nullptr )
+        this->height = this->right->height+1;
+    else
+        this->height = std::max(this->left->height, this->right->height)+1;
+
+    // Returne true if the node's height has changed
+    return !( prev_height == this->height );
+}
 
 // BSTree Class
 //      Constructors & Destructors
@@ -35,6 +51,8 @@ int BSTree<T>::get_size(){
     return this->size;
 };
 
+//      Other Methods
+
 //      Insert, Remove & Find
 template <class T> 
 bool BSTree<T>::insert( T content ){
@@ -46,16 +64,16 @@ bool BSTree<T>::insert( T content ){
         this->size++;
         return true;
     }
-    // Insert new nod at the correct position
+    // Insert new node at the correct position
     if( this->insert_at( content, this->root ) ){
         this->size++;
+        this->update_path( content, this->root );
     }
     else return false;
 
     delete no;
     return true;
 };
-
 template <class T>
 bool BSTree<T>::insert_at( const T &content, Node<T> *ptr ){
     
@@ -84,18 +102,7 @@ bool BSTree<T>::insert_at( const T &content, Node<T> *ptr ){
         }
     }
 
-    // Updating tree height
-    if( inserted == -1 || inserted == 1 ){
-        if( ptr->right == nullptr )
-            ptr->height = ptr->left->height+1;
-        else if( ptr->left == nullptr )
-            ptr->height = ptr->right->height+1;
-        else
-            ptr->height = std::max(ptr->left->height, ptr->right->height)+1;
-        return true;
-    }
-
-    return false;
+    return inserted == -1 || inserted == 1;
 };
 
 template <class T>
@@ -120,7 +127,7 @@ Node<T>* BSTree<T>::find_at( const T &content, Node<T> *ptr){
     return ptr;
 }
 
-//              Remove functions
+//     Remove functions
 template <class T>
 bool BSTree<T>::remove( T content ){
     bool r_value;
@@ -135,7 +142,6 @@ bool BSTree<T>::remove( T content ){
     r_value = this->remove_at(content, this->root);
 
     if( r_value ){
-        this->update_nodes( this->root );
         this->size--;
     }
     return r_value;
@@ -186,10 +192,14 @@ bool BSTree<T>::remove_at( const T &content, Node<T> *ptr_fat ){
 template <class T>
 void BSTree<T>::delete_node( Node<T> *ptr_fat, Node<T> *ptr, char son_direction ){
     Node<T> *ptr_aux = nullptr, *ptr_aux_fat = nullptr;
+    T content_update_path;
 
     // Remove Cases
     //    Leaf Node
     if( ptr->left==nullptr && ptr->right==nullptr  ){
+        // Update Path
+        content_update_path = ptr->content;
+
         delete ptr;
         if( son_direction != 0 ){
             if( son_direction == -1 )
@@ -198,7 +208,7 @@ void BSTree<T>::delete_node( Node<T> *ptr_fat, Node<T> *ptr, char son_direction 
                 ptr_fat->right = nullptr;
         }
     }//   Node with left subtree empty
-    else if( ptr->right != nullptr ){
+    else if( ptr->left == nullptr ){
         ptr_aux_fat = ptr->right;//
         ptr_aux = ptr_aux_fat->left;
 
@@ -207,6 +217,8 @@ void BSTree<T>::delete_node( Node<T> *ptr_fat, Node<T> *ptr, char son_direction 
             ptr->right = ptr_aux_fat->right;//
             ptr_aux_fat->right = nullptr;//
             delete ptr_aux_fat;
+
+            content_update_path = ptr->content;
         }
         else{
             while( ptr_aux->left != nullptr ){
@@ -217,6 +229,8 @@ void BSTree<T>::delete_node( Node<T> *ptr_fat, Node<T> *ptr, char son_direction 
             ptr_aux_fat->left = ptr_aux->right;//
             ptr_aux->right = nullptr;//
             delete ptr_aux;
+
+            content_update_path = ptr_aux_fat->content;
         }
     }//   Node with left subtree not empty
     else if( ptr->left != nullptr ){
@@ -228,6 +242,8 @@ void BSTree<T>::delete_node( Node<T> *ptr_fat, Node<T> *ptr, char son_direction 
             ptr->left = ptr_aux_fat->left;//
             ptr_aux_fat->left = nullptr;//
             delete ptr_aux_fat;
+
+            content_update_path = ptr->content;
         }
         else{
             while( ptr_aux->right != nullptr ){
@@ -239,17 +255,30 @@ void BSTree<T>::delete_node( Node<T> *ptr_fat, Node<T> *ptr, char son_direction 
             ptr_aux_fat->right = ptr_aux->left;//
             ptr_aux->left = nullptr;//
             delete ptr_aux;
+
+            content_update_path = ptr_aux_fat->content;
         }
     }
 
+    //Update path
+    this->update_path( content_update_path, this->root );
 }
 
+// Function to update nodes info only in a especific path
 template <class T>
-int BSTree<T>::update_nodes( Node<T> *ptr ){
-    if( ptr == nullptr ) return -1;
-    ptr->height = std::max(this->update_nodes(ptr->left), 
-                           this->update_nodes(ptr->right))+1;
-    return ptr->height;
+void BSTree<T>::update_path( const T &content, Node<T> *ptr ){
+    
+    if( ptr == nullptr )
+        return;
+
+    if( ptr->content > content ){
+        this->update_path(content, ptr->left);
+    }
+    else if( ptr->content < content ){
+        this->update_path(content, ptr->right);
+    }
+
+    ptr->update_height();
 }
 
 // Pre Order, In Order, Pos Order,
@@ -308,3 +337,10 @@ void BSTree<T>::print_hierarchy(Node<T> *root, std::string s ){
     std::cout << s << root->get_content() <<"("<<root->height<< ")\n";
     print_hierarchy(root->right, s+"  ");
 };
+
+// Extended Methods:
+//       Return nth-element in symmetric order
+template <class T>
+T BSTree<T>::nth_elem(int pos){
+    return this->root->get_content();
+}
