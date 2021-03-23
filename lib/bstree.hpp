@@ -21,6 +21,7 @@ class Node{
         // Methods
         T get_content();
         bool update_height();
+        bool update_n_nodes();
 };
 
 template <class T = int> 
@@ -44,6 +45,8 @@ class BSTree{
         void pos_order(Node<T> *root);
 
         void print_hierarchy(Node<T> *root, std::string s);
+
+        T nth_elem(int pos, int num_left_nodes, Node<T> *ptr);
     public:
         // Constructors & Destructors
         ~BSTree();

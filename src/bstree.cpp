@@ -31,7 +31,22 @@ template <class T> bool Node<T>::update_height(){
 
     // Returne true if the node's height has changed
     return !( prev_height == this->height );
-}
+};
+template <class T> bool Node<T>::update_n_nodes(){
+    int prev_left = this->n_left_nodes, prev_right = this->n_right_nodes;
+
+    if( this->left == nullptr )
+        this->n_left_nodes = 0;
+    else
+        this->n_left_nodes = 1+this->left->n_left_nodes+this->left->n_right_nodes;
+
+    if( this->right == nullptr )
+        this->n_right_nodes = 0;
+    else
+        this->n_right_nodes = 1+this->right->n_left_nodes+this->right->n_right_nodes;
+
+    return !( prev_left == this->n_left_nodes && prev_right == this->n_right_nodes);
+};
 
 // BSTree Class
 //      Constructors & Destructors
@@ -271,14 +286,13 @@ void BSTree<T>::update_path( const T &content, Node<T> *ptr ){
     if( ptr == nullptr )
         return;
 
-    if( ptr->content > content ){
+    if( ptr->content > content )
         this->update_path(content, ptr->left);
-    }
-    else if( ptr->content < content ){
+    else if( ptr->content < content )
         this->update_path(content, ptr->right);
-    }
 
     ptr->update_height();
+    ptr->update_n_nodes();
 }
 
 // Pre Order, In Order, Pos Order,
@@ -333,8 +347,10 @@ void BSTree<T>::print_hierarchy(Node<T> *root, std::string s ){
     if( root == nullptr ){
         return;
     };
-    print_hierarchy(root->left, s+"  ");
-    std::cout << s << root->get_content() <<"("<<root->height<< ")\n";
+    print_hierarchy(root->left, s+"   ");
+    std::cout << s << root->get_content() <<"("<<root->height;
+    std::cout << ","<<root->n_left_nodes<<","<<root->n_right_nodes<< ")";
+    std::cout << std::endl;
     print_hierarchy(root->right, s+"  ");
 };
 
@@ -342,5 +358,17 @@ void BSTree<T>::print_hierarchy(Node<T> *root, std::string s ){
 //       Return nth-element in symmetric order
 template <class T>
 T BSTree<T>::nth_elem(int pos){
-    return this->root->get_content();
+    return this->nth_elem( std::min(pos, this->size), 0, this->root );
+}
+template <class T>
+T BSTree<T>::nth_elem(int pos, int num_left_nodes, Node<T> *ptr){
+    
+    if( ptr->n_left_nodes + num_left_nodes > pos ){
+        return nth_elem( pos, num_left_nodes, ptr->left );
+    }
+    else if( ptr->n_left_nodes + num_left_nodes < pos ){
+        return nth_elem( pos, ptr->n_left_nodes+1+num_left_nodes, ptr->right );
+    }
+    return ptr->content;
+
 }
