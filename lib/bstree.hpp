@@ -46,7 +46,9 @@ class BSTree{
 
         void print_hierarchy(Node<T> *root, std::string s);
 
+        // Extended Methods - Overload
         T nth_elem(int pos, int num_left_nodes, Node<T> *ptr);
+        int position( const T &content, int num_left_nodes, Node<T> *ptr );
     public:
         // Constructors & Destructors
         ~BSTree();
@@ -68,7 +70,9 @@ class BSTree{
 
         // Extended Methods:
         // Return nth-element in symmetric order
-        T nth_elem(int pos); 
+        T nth_elem(int pos);
+        // Return the position of a element
+        int position( const T &content );
 };
 
 #endif

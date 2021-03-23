@@ -35,6 +35,8 @@ int main(){
     std::cout << "\n";
     tree2.in_order();
     std::cout << "\n";
+    for( int x: elems2 )
+        tree2.position(x);
 
     return 0;
 }

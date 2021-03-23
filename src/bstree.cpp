@@ -370,5 +370,23 @@ T BSTree<T>::nth_elem(int pos, int num_left_nodes, Node<T> *ptr){
         return nth_elem( pos, ptr->n_left_nodes+1+num_left_nodes, ptr->right );
     }
     return ptr->content;
+}
+//        Return the position of a element
+template <class T>
+int BSTree<T>::position( const T &content ){
+    return this->position( content, 0, this->root );
+}
+template <class T>
+int BSTree<T>::position( const T &content, int num_left_nodes, Node<T> *ptr ){
+    // Return -1 if element is not found
+    if( ptr == nullptr )
+        return -1;
 
+    if( ptr->content > content ){
+        return this->position( content, num_left_nodes, ptr->left );
+    }
+    else if( ptr->content < content ){
+        return this->position( content, ptr->n_left_nodes+1+num_left_nodes, ptr->right );
+    }
+    return ptr->n_left_nodes + num_left_nodes ;
 }
