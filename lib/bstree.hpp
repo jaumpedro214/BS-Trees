@@ -73,6 +73,8 @@ class BSTree{
         T nth_elem(int pos);
         // Return the position of a element
         int position( const T &content );
+        // Return the median
+        T median();
 };
 
 #endif

@@ -5,17 +5,17 @@
 template <class T> Node<T>::Node(){};
 template <class T> Node<T>::Node(T content){
     this->content = content;
-};
+}
 template <class T> Node<T>::~Node(){
     if( this->left != nullptr )
         delete this->left;
     if( this->right != nullptr )
         delete this->right;
-};
+}
 //      Geters & Seters
 template <class T> T Node<T>::get_content(){
     return this->content;
-};
+}
 //      Other methods
 template <class T> bool Node<T>::update_height(){
     int prev_height = this->height;
@@ -31,7 +31,7 @@ template <class T> bool Node<T>::update_height(){
 
     // Returne true if the node's height has changed
     return !( prev_height == this->height );
-};
+}
 template <class T> bool Node<T>::update_n_nodes(){
     int prev_left = this->n_left_nodes, prev_right = this->n_right_nodes;
 
@@ -46,7 +46,7 @@ template <class T> bool Node<T>::update_n_nodes(){
         this->n_right_nodes = 1+this->right->n_left_nodes+this->right->n_right_nodes;
 
     return !( prev_left == this->n_left_nodes && prev_right == this->n_right_nodes);
-};
+}
 
 // BSTree Class
 //      Constructors & Destructors
@@ -54,17 +54,17 @@ template <class T>
 BSTree<T>::~BSTree(){
     if( this->root!=nullptr )
         delete this->root;
-};
+}
 
 //      Geters & Seters
 template <class T> 
 Node<T>* BSTree<T>::get_root(){
     return this->root;
-};
+}
 template <class T> 
 int BSTree<T>::get_size(){
     return this->size;
-};
+}
 
 //      Other Methods
 
@@ -118,7 +118,7 @@ bool BSTree<T>::insert_at( const T &content, Node<T> *ptr ){
     }
 
     return inserted == -1 || inserted == 1;
-};
+}
 
 template <class T>
 Node<T>* BSTree<T>::find( T content ){
@@ -299,7 +299,7 @@ void BSTree<T>::update_path( const T &content, Node<T> *ptr ){
 template <class T>
 void BSTree<T>::pre_order(){
     this->pre_order(this->root);
-};
+}
 template <class T>
 void BSTree<T>::pre_order(Node<T> *root){
     if( root == nullptr ){
@@ -308,12 +308,12 @@ void BSTree<T>::pre_order(Node<T> *root){
     std::cout << root->get_content() <<" ";
     pre_order(root->left);
     pre_order(root->right);
-};
+}
 
 template <class T>
 void BSTree<T>::in_order(){
     this->in_order(this->root);
-};
+}
 template <class T>
 void BSTree<T>::in_order(Node<T> *root){
     if( root == nullptr ){
@@ -322,12 +322,12 @@ void BSTree<T>::in_order(Node<T> *root){
     in_order(root->left);
     std::cout << root->get_content() <<" ";
     in_order(root->right);
-};
+}
 
 template <class T>
 void BSTree<T>::pos_order(){
     this->pos_order(this->root);
-};
+}
 template <class T>
 void BSTree<T>::pos_order(Node<T> *root){
     if( root == nullptr ){
@@ -336,12 +336,12 @@ void BSTree<T>::pos_order(Node<T> *root){
     pos_order(root->left);
     pos_order(root->right);
     std::cout << root->get_content() <<" ";
-};
+}
 
 template <class T>
 void BSTree<T>::print_hierarchy(){
     this->print_hierarchy(this->root, "");
-};
+}
 template <class T>
 void BSTree<T>::print_hierarchy(Node<T> *root, std::string s ){
     if( root == nullptr ){
@@ -352,7 +352,7 @@ void BSTree<T>::print_hierarchy(Node<T> *root, std::string s ){
     std::cout << ","<<root->n_left_nodes<<","<<root->n_right_nodes<< ")";
     std::cout << std::endl;
     print_hierarchy(root->right, s+"  ");
-};
+}
 
 // Extended Methods:
 //       Return nth-element in symmetric order
@@ -364,10 +364,10 @@ template <class T>
 T BSTree<T>::nth_elem(int pos, int num_left_nodes, Node<T> *ptr){
     
     if( ptr->n_left_nodes + num_left_nodes > pos ){
-        return nth_elem( pos, num_left_nodes, ptr->left );
+        return this->nth_elem( pos, num_left_nodes, ptr->left );
     }
     else if( ptr->n_left_nodes + num_left_nodes < pos ){
-        return nth_elem( pos, ptr->n_left_nodes+1+num_left_nodes, ptr->right );
+        return this->nth_elem( pos, ptr->n_left_nodes+1+num_left_nodes, ptr->right );
     }
     return ptr->content;
 }
@@ -389,4 +389,16 @@ int BSTree<T>::position( const T &content, int num_left_nodes, Node<T> *ptr ){
         return this->position( content, ptr->n_left_nodes+1+num_left_nodes, ptr->right );
     }
     return ptr->n_left_nodes + num_left_nodes ;
+}
+//       Return the Median
+template <class T>
+T BSTree<T>::median(){
+    int p1 = (this->size-1)/2, p2 = (this->size-1)/2 + 1;
+    
+    if( this->size%2 == 0 ){
+        return std::min( this->nth_elem(p1), this->nth_elem(p2) );
+    }
+    else{
+        return this->nth_elem(p1);
+    }
 }

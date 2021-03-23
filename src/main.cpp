@@ -30,6 +30,8 @@ int main(){
 
     tree2.print_hierarchy();
 
+    std::cout << tree2.get_size();
+    std::cout << "\n";
     for( int i = 0 ; i < tree2.get_size(); i++ )
         std::cout << tree2.nth_elem(i) << " "; 
     std::cout << "\n";
@@ -37,6 +39,7 @@ int main(){
     std::cout << "\n";
     for( int x: elems2 )
         tree2.position(x);
+    std::cout << tree2.median();
 
     return 0;
 }
