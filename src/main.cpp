@@ -17,14 +17,9 @@ int main(){
 
     for( int x: elems )
         tree.insert(x);
-    /*
     tree2.remove(20);
     tree2.remove(100);
     tree2.remove(150);
-    tree2.remove(120);
-    tree2.remove(30);
-    tree2.remove(75); tree2.remove(70); tree2.remove(50); tree2.remove(25);
-    tree2.remove(180); tree2.remove(170);*/
     tree2.print_hierarchy();
     std::cout << tree2.get_size();
     std::cout << "\n";
@@ -38,6 +33,7 @@ int main(){
     std::cout << tree2.median() << std::endl;
     std::cout << "Tree is complete - " << tree2.is_complete() << std::endl;
     std::cout << "Tree is full - " << tree2.is_full() << std::endl;
+    std::cout << tree2.to_string();
 
     return 0;
 }

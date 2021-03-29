@@ -386,16 +386,11 @@ template <class T>
 void BSTree<T>::print_hierarchy(Node<T> *root, std::string s ){
     if( root == nullptr ){
         return;
-    };
+    }
     print_hierarchy(root->left, s+"   ");
-    std::cout << s << root->get_content() <<"(";
-    std::cout << root->height << ",";
-    //std::cout << ","<<root->n_left_nodes<<","<<root->n_right_nodes<< ")";
-    std::cout << "," << root->level;
-    std::cout << "," << root->n_null_ptr; 
-    std::cout<<")";
+    std::cout << s << root->get_content();
     std::cout << std::endl;
-    print_hierarchy(root->right, s+"  ");
+    print_hierarchy(root->right, s+"   ");
 }
 
 // Extended Methods:
@@ -457,7 +452,7 @@ bool BSTree<T>::is_complete(){
     }
     return true;
 }
-
+//       Return whether the tree is Full
 template <class T>
 bool BSTree<T>::is_full(){
     if( this->null_ptr_per_level.size() <= 1 ) 
@@ -465,4 +460,27 @@ bool BSTree<T>::is_full(){
     
     return (this->is_complete() && 
             this->null_ptr_per_level[this->null_ptr_per_level.size()-2]==0); 
+}
+//      Return a string representing the tree by level
+template <class T>
+std::string BSTree<T>::to_string(){
+    std::queue< Node<T>* > node_queue;
+    Node<T> *no_atual;
+    std::stringstream ss;
+
+    if( this->root == nullptr )
+        return "";
+    
+    node_queue.push( this->root );
+    while( !node_queue.empty() ){
+        no_atual = node_queue.front();
+        node_queue.pop();
+        ss << no_atual->content << " ";
+
+        if( no_atual->left != nullptr )
+            node_queue.push( no_atual->left );
+        if( no_atual->right != nullptr )
+            node_queue.push( no_atual->right );
+    }
+    return ss.str();
 }

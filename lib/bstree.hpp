@@ -5,6 +5,9 @@
 #include <string>
 #include <algorithm> // max
 #include <vector> // vector
+// needed to to_string() method
+#include <queue>
+#include <sstream>  
 
 template <class T>
 class Node{
@@ -87,6 +90,8 @@ class BSTree{
         bool is_complete();
         // Return whether the tree is Full
         bool is_full();
+        // Return a string representing the tree by level
+        std::string to_string();
 };
 
 #endif
