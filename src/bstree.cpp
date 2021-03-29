@@ -384,13 +384,13 @@ void BSTree<T>::print_hierarchy(){
 }
 template <class T>
 void BSTree<T>::print_hierarchy(Node<T> *root, std::string s ){
-    if( root == nullptr ){
+    if( root == nullptr )
         return;
-    }
-    print_hierarchy(root->left, s+"   ");
+        
+    print_hierarchy(root->left, s+"  ");
     std::cout << s << root->get_content();
     std::cout << std::endl;
-    print_hierarchy(root->right, s+"   ");
+    print_hierarchy(root->right, s+"  ");
 }
 
 // Extended Methods:
