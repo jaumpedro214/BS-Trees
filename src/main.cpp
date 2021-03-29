@@ -9,7 +9,7 @@ int main(){
     BSTree<int> tree2;
     BSTree<std::string> tree3;
     char elems[] = {'G','B','D','A','H','F','C','E','K','I','W',};
-    int elems2[] = {50, 40, 60, 54, 65, 55, 58, 57, 56, 52, 61, 67, 45, 35, 12, -30, -12, -10 , -1, 123, 345, 333};
+    int elems2[] = {100, 50, 150, 25, 75, 125, 175, 30, 20, 80, 70, 130, 120, 180, 170};
     std::string elems3[] = {"Joao", "Pedro", "Maria", "Ziraldo", "Francisco"};
     
     for( int x: elems2 )
@@ -17,16 +17,6 @@ int main(){
 
     for( int x: elems )
         tree.insert(x);
-
-    tree2.remove(33);
-    tree2.remove(333);
-    tree2.remove(-1);
-    tree2.remove(-10);
-    tree2.remove(50);
-    tree2.insert(2323);
-    tree2.insert(11120);
-    tree2.remove(11120);
-    tree2.insert(-2);
 
     tree2.print_hierarchy();
 

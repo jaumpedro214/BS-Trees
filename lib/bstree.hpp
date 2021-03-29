@@ -11,6 +11,7 @@ class Node{
     private:
         T content;
         int height = 0;
+        int level = 0;
         int n_left_nodes = 0, n_right_nodes = 0;
         Node<T> *left=nullptr, *right=nullptr;
     public:
@@ -22,6 +23,7 @@ class Node{
         T get_content();
         bool update_height();
         bool update_n_nodes();
+        bool update_level( int level );
 };
 
 template <class T = int> 
@@ -37,7 +39,7 @@ class BSTree{
         void delete_node( Node<T> *ptr_fat, Node<T> *ptr, char son_direction );
         Node<T>* find_at(const T &content, Node<T> *ptr);
         int update_nodes( Node<T> *ptr );
-        void update_path( const T &content, Node<T> *ptr );
+        void update_path( const T &content, Node<T> *ptr, int level );
 
         // Pre Order, In Order, Pos Order - Overload
         void pre_order(Node<T> *root);

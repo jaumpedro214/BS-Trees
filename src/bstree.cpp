@@ -47,6 +47,11 @@ template <class T> bool Node<T>::update_n_nodes(){
 
     return !( prev_left == this->n_left_nodes && prev_right == this->n_right_nodes);
 }
+template <class T> bool Node<T>::update_level( int level ){
+    int prev_level = this->level;
+    this->level = level;
+    return !(prev_level == level);
+}
 
 // BSTree Class
 //      Constructors & Destructors
@@ -82,7 +87,7 @@ bool BSTree<T>::insert( T content ){
     // Insert new node at the correct position
     if( this->insert_at( content, this->root ) ){
         this->size++;
-        this->update_path( content, this->root );
+        this->update_path( content, this->root, 0 );
     }
     else return false;
 
@@ -276,23 +281,24 @@ void BSTree<T>::delete_node( Node<T> *ptr_fat, Node<T> *ptr, char son_direction 
     }
 
     //Update path
-    this->update_path( content_update_path, this->root );
+    this->update_path( content_update_path, this->root, 0 );
 }
 
 // Function to update nodes info only in a especific path
 template <class T>
-void BSTree<T>::update_path( const T &content, Node<T> *ptr ){
+void BSTree<T>::update_path( const T &content, Node<T> *ptr, int level ){
     
     if( ptr == nullptr )
         return;
 
     if( ptr->content > content )
-        this->update_path(content, ptr->left);
+        this->update_path(content, ptr->left, level+1);
     else if( ptr->content < content )
-        this->update_path(content, ptr->right);
+        this->update_path(content, ptr->right, level+1);
 
     ptr->update_height();
     ptr->update_n_nodes();
+    ptr->update_level(level);
 }
 
 // Pre Order, In Order, Pos Order,
@@ -348,8 +354,10 @@ void BSTree<T>::print_hierarchy(Node<T> *root, std::string s ){
         return;
     };
     print_hierarchy(root->left, s+"   ");
-    std::cout << s << root->get_content() <<"("<<root->height;
-    std::cout << ","<<root->n_left_nodes<<","<<root->n_right_nodes<< ")";
+    std::cout << s << root->get_content() <<"(";
+    //std::cout <<root->height << ",";
+    //std::cout << ","<<root->n_left_nodes<<","<<root->n_right_nodes<< ")";
+    std::cout << "," << root->level <<")";
     std::cout << std::endl;
     print_hierarchy(root->right, s+"  ");
 }
