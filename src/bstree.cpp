@@ -16,6 +16,14 @@ template <class T> Node<T>::~Node(){
 template <class T> T Node<T>::get_content(){
     return this->content;
 }
+template <class T> int Node<T>::update_n_null(){
+    int prev_n_null_ptr = this->n_null_ptr;
+    int n_null_ptr = 0;
+    n_null_ptr += this->left == nullptr;
+    n_null_ptr += this->right == nullptr;
+    this->n_null_ptr = n_null_ptr;
+    return (n_null_ptr-prev_n_null_ptr);
+}
 //      Other methods
 template <class T> bool Node<T>::update_height(){
     int prev_height = this->height;
@@ -82,6 +90,7 @@ bool BSTree<T>::insert( T content ){
     if( this->size == 0 ){
         this->root = no;
         this->size++;
+        this->update_path( content, this->root, 0 );
         return true;
     }
     // Insert new node at the correct position
@@ -299,6 +308,31 @@ void BSTree<T>::update_path( const T &content, Node<T> *ptr, int level ){
     ptr->update_height();
     ptr->update_n_nodes();
     ptr->update_level(level);
+
+    // Update null_ptr_per_level vector
+    // Useful for is_complete() and is_full()
+    this->update_null_ptr_per_level(ptr);
+}
+template <class T>
+void BSTree<T>::update_null_ptr_per_level( Node<T> *ptr ){
+    int n_null_change;
+    if( (size_t) ptr->level >= this->null_ptr_per_level.size() ){
+        // include new level in vector
+        this->null_ptr_per_level.push_back(2);
+        ptr->update_n_null();
+    }
+    else{
+        // Update already created level
+        n_null_change = ptr->update_n_null();
+        this->null_ptr_per_level[ ptr->level ] += n_null_change;
+        if( n_null_change > 0 &&
+            (size_t)(ptr->level+1) < this->null_ptr_per_level.size() )
+            this->null_ptr_per_level[ ptr->level+1 ] -= 2;
+    }
+
+    // Remove last level if its empty
+    if( this->null_ptr_per_level.back() == 0 )
+        this->null_ptr_per_level.pop_back();
 }
 
 // Pre Order, In Order, Pos Order,
@@ -355,9 +389,11 @@ void BSTree<T>::print_hierarchy(Node<T> *root, std::string s ){
     };
     print_hierarchy(root->left, s+"   ");
     std::cout << s << root->get_content() <<"(";
-    //std::cout <<root->height << ",";
+    std::cout << root->height << ",";
     //std::cout << ","<<root->n_left_nodes<<","<<root->n_right_nodes<< ")";
-    std::cout << "," << root->level <<")";
+    std::cout << "," << root->level;
+    std::cout << "," << root->n_null_ptr; 
+    std::cout<<")";
     std::cout << std::endl;
     print_hierarchy(root->right, s+"  ");
 }
@@ -409,4 +445,24 @@ T BSTree<T>::median(){
     else{
         return this->nth_elem(p1);
     }
+}
+template <class T>
+bool BSTree<T>::is_complete(){
+    if( this->null_ptr_per_level.size() <= 2 ) 
+        return true;
+
+    for( size_t i = 0; i < this->null_ptr_per_level.size()-2; i++ ){
+        if( this->null_ptr_per_level[i] != 0 )
+            return false;
+    }
+    return true;
+}
+
+template <class T>
+bool BSTree<T>::is_full(){
+    if( this->null_ptr_per_level.size() <= 1 ) 
+        return true;
+    
+    return (this->is_complete() && 
+            this->null_ptr_per_level[this->null_ptr_per_level.size()-2]==0); 
 }

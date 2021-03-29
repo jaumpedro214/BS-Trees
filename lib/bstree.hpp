@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm> // max
+#include <vector> // vector
 
 template <class T>
 class Node{
@@ -13,6 +14,7 @@ class Node{
         int height = 0;
         int level = 0;
         int n_left_nodes = 0, n_right_nodes = 0;
+        int n_null_ptr = 0;
         Node<T> *left=nullptr, *right=nullptr;
     public:
         // Constructors & Destructors
@@ -21,6 +23,7 @@ class Node{
         ~Node();
         // Methods
         T get_content();
+        int update_n_null();
         bool update_height();
         bool update_n_nodes();
         bool update_level( int level );
@@ -29,9 +32,11 @@ class Node{
 template <class T = int> 
 class BSTree{
     private:
+        //Parameters
         Node<T> *root=nullptr;
         int altura = 0;
         int size = 0;
+        std::vector<int> null_ptr_per_level;
 
         // Insert, Remove & Find - Utils
         bool insert_at( const T &content, Node<T> *ptr );
@@ -40,6 +45,7 @@ class BSTree{
         Node<T>* find_at(const T &content, Node<T> *ptr);
         int update_nodes( Node<T> *ptr );
         void update_path( const T &content, Node<T> *ptr, int level );
+        void update_null_ptr_per_level( Node<T> *ptr );
 
         // Pre Order, In Order, Pos Order - Overload
         void pre_order(Node<T> *root);
@@ -77,6 +83,10 @@ class BSTree{
         int position( const T &content );
         // Return the median
         T median();
+        // Return whether the tree is Complete
+        bool is_complete();
+        // Return whether the tree is Full
+        bool is_full();
 };
 
 #endif
