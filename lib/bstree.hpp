@@ -4,9 +4,8 @@
 #include <iostream>
 #include <string>
 #include <algorithm> // max
-#include <vector> // vector
-// needed to to_string() method
-#include <queue>
+#include <vector> // vector null_ptr_per_level
+#include <queue> // needed to to_string() method
 #include <sstream>  
 
 template <class T>
@@ -39,7 +38,7 @@ class BSTree{
         Node<T> *root=nullptr;
         int altura = 0;
         int size = 0;
-        std::vector<int> null_ptr_per_level;
+        
 
         // Insert, Remove & Find - Utils
         bool insert_at( const T &content, Node<T> *ptr );
@@ -61,6 +60,7 @@ class BSTree{
         T nth_elem(int pos, int num_left_nodes, Node<T> *ptr);
         int position( const T &content, int num_left_nodes, Node<T> *ptr );
     public:
+        std::vector<int> null_ptr_per_level;
         // Constructors & Destructors
         ~BSTree();
         Node<T>* get_root();
