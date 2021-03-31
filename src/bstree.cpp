@@ -47,11 +47,6 @@ template <class T> bool Node<T>::update_n_nodes(){
 
     return !( prev_left == this->n_left_nodes && prev_right == this->n_right_nodes);
 }
-template <class T> bool Node<T>::update_level( int level ){
-    int prev_level = this->level;
-    this->level = level;
-    return !(prev_level == level);
-}
 template <class T>
 bool Node<T>::update_is_full(){
     bool prev_is_full = this->is_full;
@@ -143,11 +138,9 @@ int BSTree<T>::get_size(){
 //      Insert, Remove & Find
 template <class T> 
 bool BSTree<T>::insert( T content ){
-    Node<T> *no = new Node<T>(content);
-
     // Create root if tree is empty
     if( this->size == 0 ){
-        this->root = no;
+        this->root = new Node<T>(content);
         this->size++;
         this->update_path( content, this->root, 0 );
         return true;
@@ -159,7 +152,6 @@ bool BSTree<T>::insert( T content ){
     }
     else return false;
 
-    delete no;
     return true;
 }
 template <class T>
@@ -366,12 +358,8 @@ void BSTree<T>::update_path( const T &content, Node<T> *ptr, int level ){
 
     ptr->update_height();
     ptr->update_n_nodes();
-    ptr->update_level(level);
     ptr->update_is_full();
     ptr->update_is_complete();
-
-    // Update null_ptr_per_level vector
-    // Useful for is_complete() and is_full()
 }
 //      Pre Order, In Order, Pos Order,
 template <class T>

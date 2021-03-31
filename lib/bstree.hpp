@@ -4,11 +4,9 @@
 #include <iostream>
 #include <string>
 #include <algorithm> // max
-#include <vector> // vector null_ptr_per_level
+#include <vector>
 #include <queue> // needed to to_string() method
 #include <sstream>
-
-#include <math.h> 
 
 template <class T>
 class Node{
@@ -16,7 +14,6 @@ class Node{
     private:
         T content;
         int height = 0;
-        int level = 0;
         int n_left_nodes = 0, n_right_nodes = 0;
         bool is_complete = true;
         bool is_full = true;
@@ -31,7 +28,6 @@ class Node{
         // Update parameters
         bool update_height();
         bool update_n_nodes();
-        bool update_level( int level );
         bool update_is_full();
         bool update_is_complete();
 };
@@ -57,7 +53,7 @@ class BSTree{
         void in_order(Node<T> *root);
         void pos_order(Node<T> *root);
 
-        // Print hierarchy 
+        // Print hierarchy
         void print_hierarchy(Node<T> *root, std::string s);
 
         // Extended Methods - Overload
