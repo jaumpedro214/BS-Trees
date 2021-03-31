@@ -79,3 +79,42 @@ Os comandos disponíveis são
 
 Na pasta `/tests` é possível encontrar alguns arquivos exemplo.
 
+## Detalhamento e Análise de Complexidade
+
+### Informações extras nos nós
+
+Todos os métodos extendidos acima podem ser implementados sobre a versão tradicional do nó com chamadas recursivas a partir da raiz. 
+
+Um exemplo disso é o método abaixo que calcula a altura da árvore (altura da raiz).
+
+```c++
+int height(root){
+  int hleft, hright;
+  if(root == nullptr) 
+    return -1;
+  hleft = 1 + height(root->left);
+  hright = 1 + height(root->right);
+  return max(hleft, hright);
+}
+```
+
+A principal deficiência desse método é sempre recalcular a altura de todas os nós da árvore, o que o deixa com complexidade _O(n)_.
+Este problema é resolvido por meio de duas mudanças simples:
+- Adicionando, em cada nó, a informação sobre sua altura.
+- Atualizando a altura somente para os nós no caminho de alguma mudança (Inserção ou Remoção).
+
+A função da _BSTRee_ responsável por realizar isso é a _update_path()_. Ela atualiza as informações de todos os nós do caminho da raiz até um alvo.
+Por isso, sua complexidade é a mesma dos métodos de inserção e remoção, _O(h)_.
+
+Dessa forma, a consulta da altura do nó raiz pode ser feita em tempo constante.
+
+### Complexidade dos métodos exapandidos
+
+- **T nth_elem(int n)**: 
+   _O(h)_, Utiliza as o número de nós a esquerda (n_left_nodes) para encontrar o nó na posição **p** no percurso simétrico. Pode ser entendido como o método find aplicado sobre a posição do nó.
+- **int position(T elem)**: 
+   _O(h)_, Realiza o método find tradicional enquanto calcula o a posião atual do nó visitado. 
+- **T median()**: _O(h)_, Utiliza o número total **n** de nós da árvore para calcular o elemento central n/2 (n ímpar), ou  min entre (n/2, n/2+1) (n par).
+- **bool is_complete()**: Retorna se a árvore é completa ou não
+- **bool is_full()**: Retorna se a árvore é cheia ou não
+- **string to_string()**: Retorna uma string que representa o percurso em nível nos nós da árvore
