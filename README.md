@@ -11,7 +11,7 @@ A implementação foi pensadad para suportar, além dos métodos convencionais d
 - **bool is_full()**: Retorna se a árvore é cheia ou não
 - **string to_string()**: Retorna uma string que representa o percurso em nível nos nós da árvore
 
-Para visualizar o funcionamento dos métodos, também foi criada uma rotina que cria e interage com uma árvore a partir de comandos de texto contidas em arquivos.
+Para visualizar o funcionamento dos métodos, também foi criada uma rotina que cria e interage com uma árvore a partir de comandos de texto contidos em arquivos.
 Para isso, são necessários dois arquivos, veja **Executando**; 
 
 Esta implementação foi desenvolvida como trabalho para a disciplina _Estruturas de dados básicas II - DIMAP - UFRN_
@@ -27,6 +27,7 @@ Para suportar com eficiência os novos métodos propostos, a classe precisou ser
 - **n_left_nodes**: Número de nós na subárvore esquerda
 - **n_right_nodes**: Número de nós na subárvore direita
 - **is_complete**: Indica se o nó é uma árvore completa ou não
+- **is_full**: Indica se o nó é uma árvore completa ou não
 
 Para atualizar essas informações foi implementada na classe BSTree a função _update_path_(), responsável por atualizar os nós somente no caminho alterado pelos métodos _insert_ e _remove_.
 
@@ -102,19 +103,20 @@ A principal deficiência desse método é sempre recalcular a altura de todas os
 Este problema é resolvido por meio de duas mudanças simples:
 - Adicionando, em cada nó, a informação sobre sua altura.
 - Atualizando a altura somente para os nós no caminho de alguma mudança (Inserção ou Remoção).
-
-A função da _BSTRee_ responsável por realizar isso é a _update_path()_. Ela atualiza as informações de todos os nós do caminho da raiz até um alvo.
-Por isso, sua complexidade é a mesma dos métodos de inserção e remoção, _O(h)_.
-
 Dessa forma, a consulta da altura do nó raiz pode ser feita em tempo constante.
 
+A função da _BSTree_ responsável por realizar a atualização é a _update_path()_. Ela atualiza as informações de todos os nós no caminho da raiz até um alvo,
+como cada atualização é feita de modo constante, sua complexidade assintótica acaba sendo a mesma dos métodos de inserção e remoção, _O(h)_.
+
 ### Complexidade dos métodos exapandidos
+
+Abaixo, podemos ver a complexidade dos métodos implementados e como eles utilizam as informações extras dos nó.
 
 - **T nth_elem(int n)**: 
    _O(h)_, Utiliza as o número de nós a esquerda (n_left_nodes) para encontrar o nó na posição **p** no percurso simétrico. Pode ser entendido como o método find aplicado sobre a posição do nó.
 - **int position(T elem)**: 
    _O(h)_, Realiza o método find tradicional enquanto calcula o a posião atual do nó visitado. 
 - **T median()**: _O(h)_, Utiliza o número total **n** de nós da árvore para calcular o elemento central n/2 (n ímpar), ou  min entre (n/2, n/2+1) (n par).
-- **bool is_complete()**: Retorna se a árvore é completa ou não
-- **bool is_full()**: Retorna se a árvore é cheia ou não
-- **string to_string()**: Retorna uma string que representa o percurso em nível nos nós da árvore
+- **bool is_complete()**: _O(1)_, Utiliza a informação _is_complete_ contida na raiz.
+- **bool is_full()**: _O(1)_, Utiliza a informação _is_full_ contida na raiz.
+- **string to_string()**: _O(n)_, não utiliza nenhuma parâmetro extra, apenas faz o percurso em nível com uso de uma fila.
