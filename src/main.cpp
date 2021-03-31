@@ -26,12 +26,12 @@ void print_tree_info( std::vector<T> elems ){
     std::cout << "By-level path to string - " << tree.to_string() << std::endl;
     std::cout << "Tree median - " << tree.median() << std::endl;
 
-    std::cout << std::endl << "Find nth-element of pre-order" << std::endl;
+    std::cout << std::endl << "Find nth-element of in-order" << std::endl;
     std::cout << "Tree 0th element - " << tree.nth_elem(0) << std::endl;
     std::cout << "Tree 1th element - " << tree.nth_elem(1) << std::endl;
     std::cout << "Tree 5th element - " << tree.nth_elem(5) << std::endl;
 
-    std::cout << std::endl << "Find the position of a element in pre-order" << std::endl;
+    std::cout << std::endl << "Find the position of a element in in-order" << std::endl;
     std::cout << "Position of " << tree.nth_elem(6) << " - " << tree.position(tree.nth_elem(6)) << std::endl;
     std::cout << "Position of " << tree.nth_elem(3) << " - " << tree.position(tree.nth_elem(3)) << std::endl;
     std::cout << "Position of " << tree.nth_elem(0) << " - " << tree.position(tree.nth_elem(0)) << std::endl;
@@ -55,8 +55,6 @@ void read_files( std::string tree, std::string commands ){
         bstree.insert(value);
     }
     bstree.print_hierarchy();
-    for( int x: bstree.null_ptr_per_level )
-        std::cout << x << " ";
     std::cout << "\n";
 
     std::cout << "Reading commands...\n";
@@ -83,12 +81,8 @@ void read_files( std::string tree, std::string commands ){
         }
         else if( command == "REMOVA" ){
             commandsfile>>value;
-            /*std::cout <<*/ boolmapper[bstree.remove(value)];
+            std::cout << boolmapper[bstree.remove(value)];
 
-            bstree.print_hierarchy();
-            for( int x: bstree.null_ptr_per_level )
-                std::cout << x << " ";
-            std::cout << "\n";
         }
         else if( command == "INSIRA" ){
             commandsfile>>value;
@@ -96,10 +90,6 @@ void read_files( std::string tree, std::string commands ){
         }
         std::cout << std::endl;
     }
-
-    for( int x: bstree.null_ptr_per_level )
-        std::cout << x << " ";
-    std::cout << "\n";
 
     bstree.print_hierarchy();
     treefile.close();
@@ -110,13 +100,16 @@ int main(int argc, char *argv[]){
     std::vector<char> elems1 = {'G','B','D','A','H','F','C','E','K','I','W',};
     std::vector<int> elems2 = {100, 50, 150, 25, 75, 125, 175, 30, 20, 80, 70, 130, 120, 180, 170};
     std::vector<std::string> elems3 = {"Ronaldo", "Maria", "Pedro" , "Joao", "Vinicius", "Ziraldo", "Samanta", "Amanda"};
+    std::vector<float> elems4 = { 1, 2, 0.5, 0.25, 0.75, 4, 1.5 };
     
-    //print_tree_info(elems1);
-    //print_tree_info(elems2);
-    //print_tree_info(elems3);
-
     if( argc == 3 ){
         read_files( std::string(argv[1]), std::string(argv[2]) );
+    }
+    if( argc == 2 && std::string(argv[1]) == "-t" ){
+        print_tree_info(elems1);
+        print_tree_info(elems2);
+        print_tree_info(elems3);
+        print_tree_info(elems4);
     }
     
     return 0;

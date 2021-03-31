@@ -60,6 +60,63 @@ template <class T> bool Node<T>::update_level( int level ){
     this->level = level;
     return !(prev_level == level);
 }
+template <class T>
+bool Node<T>::is_full(){
+    int n_nodes = this->n_left_nodes + this->n_right_nodes+1+1;
+    bool is_power_of_2;
+    bool has_min_height;
+    float log2_result = log2( n_nodes );
+    float log2_result_floor = floor( log2_result );
+
+    // If a tree has 2 or less nodes, its always full 
+    if( n_nodes <= 2 ) return true;
+
+    // check if the number of nodes+1 is a power of 2
+    is_power_of_2 = abs( log2_result_floor - log2_result ) < 0.00001;
+    // check if the tree has min height
+    has_min_height = this->height == log2_result_floor - 1;
+    return is_power_of_2 && has_min_height;
+}
+template <class T>
+bool Node<T>::update_is_complete(){
+    bool prev_is_complete = this->is_complete;
+    int left_height, right_height;
+    bool left_is_full, right_is_full;
+    bool left_is_complete, right_is_complete;
+
+    if( this->left == nullptr ){
+        left_height = -1;
+        left_is_full = true;
+        left_is_complete = true;
+    }
+    else{
+        left_height = this->left->height;
+        left_is_full = this->left->is_full();
+        left_is_complete = this->left->is_complete;
+    }
+
+    if( this->right == nullptr ){
+        right_height = -1;
+        right_is_full = true;
+        right_is_complete = true;
+    }
+    else{
+        right_height = this->right->height;
+        right_is_full = this->right->is_full();
+        right_is_complete = this->right->is_complete;
+    }
+
+    if( left_is_complete && right_is_complete ){
+        if( left_is_full || right_is_full ){
+            this->is_complete = (abs( left_height - right_height ) <= 1);
+        }
+        else{
+            this->is_complete = (left_height == right_height);
+        }
+    }
+
+    return this->is_complete==prev_is_complete;
+}
 
 // BSTree Class
 //      Constructors & Destructors
@@ -308,33 +365,11 @@ void BSTree<T>::update_path( const T &content, Node<T> *ptr, int level ){
     ptr->update_height();
     ptr->update_n_nodes();
     ptr->update_level(level);
+    ptr->update_is_complete();
 
     // Update null_ptr_per_level vector
     // Useful for is_complete() and is_full()
-    this->update_null_ptr_per_level(ptr);
 }
-template <class T>
-void BSTree<T>::update_null_ptr_per_level( Node<T> *ptr ){
-    int n_null_change;
-    if( (size_t) ptr->level >= this->null_ptr_per_level.size() ){
-        // include new level in vector
-        this->null_ptr_per_level.push_back(2);
-        ptr->update_n_null();
-    }
-    else{
-        // Update already created level
-        n_null_change = ptr->update_n_null();
-        this->null_ptr_per_level[ ptr->level ] += n_null_change;
-        if( n_null_change > 0 &&
-            (size_t)(ptr->level+1) < this->null_ptr_per_level.size() )
-            this->null_ptr_per_level[ ptr->level+1 ] -= 2;
-    }
-
-    // Remove last level if its empty
-    if( this->null_ptr_per_level.back() == 0 )
-        this->null_ptr_per_level.pop_back();
-}
-
 // Pre Order, In Order, Pos Order,
 template <class T>
 void BSTree<T>::pre_order(){
@@ -389,7 +424,8 @@ void BSTree<T>::print_hierarchy(Node<T> *root, std::string s ){
 
     print_hierarchy(root->left, s+"  ");
     std::cout << s << root->get_content();
-    std::cout << " " << root->n_null_ptr;
+    std::cout << " " << root->height;
+    std::cout << " " << (root->is_complete?"true":"false");
     std::cout << std::endl;
     print_hierarchy(root->right, s+"  ");
 }
@@ -442,25 +478,19 @@ T BSTree<T>::median(){
         return this->nth_elem(p1);
     }
 }
+//       Return whether the tree is Complete
 template <class T>
 bool BSTree<T>::is_complete(){
-    if( this->null_ptr_per_level.size() <= 2 ) 
+    if( this->root == nullptr ) 
         return true;
-
-    for( size_t i = 0; i < this->null_ptr_per_level.size()-2; i++ ){
-        if( this->null_ptr_per_level[i] != 0 )
-            return false;
-    }
-    return true;
+    return this->root->is_complete;
 }
 //       Return whether the tree is Full
 template <class T>
 bool BSTree<T>::is_full(){
-    if( this->null_ptr_per_level.size() <= 1 ) 
+    if( this->root == nullptr ) 
         return true;
-    
-    return (this->is_complete() && 
-            this->null_ptr_per_level[this->null_ptr_per_level.size()-2]==0); 
+    return this->root->is_full();
 }
 //      Return a string representing the tree by level
 template <class T>

@@ -6,7 +6,9 @@
 #include <algorithm> // max
 #include <vector> // vector null_ptr_per_level
 #include <queue> // needed to to_string() method
-#include <sstream>  
+#include <sstream>
+
+#include <math.h> 
 
 template <class T>
 class Node{
@@ -17,6 +19,7 @@ class Node{
         int level = 0;
         int n_left_nodes = 0, n_right_nodes = 0;
         int n_null_ptr = 0;
+        bool is_complete = true;
         Node<T> *left=nullptr, *right=nullptr;
     public:
         // Constructors & Destructors
@@ -29,6 +32,8 @@ class Node{
         bool update_height();
         bool update_n_nodes();
         bool update_level( int level );
+        bool update_is_complete();
+        bool is_full();
 };
 
 template <class T = int> 
@@ -47,7 +52,6 @@ class BSTree{
         Node<T>* find_at(const T &content, Node<T> *ptr);
         int update_nodes( Node<T> *ptr );
         void update_path( const T &content, Node<T> *ptr, int level );
-        void update_null_ptr_per_level( Node<T> *ptr );
 
         // Pre Order, In Order, Pos Order - Overload
         void pre_order(Node<T> *root);
@@ -60,7 +64,6 @@ class BSTree{
         T nth_elem(int pos, int num_left_nodes, Node<T> *ptr);
         int position( const T &content, int num_left_nodes, Node<T> *ptr );
     public:
-        std::vector<int> null_ptr_per_level;
         // Constructors & Destructors
         ~BSTree();
         Node<T>* get_root();
