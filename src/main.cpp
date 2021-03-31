@@ -54,8 +54,6 @@ void read_files( std::string tree, std::string commands ){
     while( treefile >> value ){
         bstree.insert(value);
     }
-    bstree.print_hierarchy();
-    std::cout << "\n";
 
     std::cout << "Reading commands...\n";
     while( commandsfile >> command ){
@@ -76,13 +74,15 @@ void read_files( std::string tree, std::string commands ){
         else if( command == "COMPLETA" ){
             std::cout << boolmapper[bstree.is_complete()];
         }
+        else if( command == "IMPRIMA_ARVORE"){
+            bstree.print_hierarchy();
+        }
         else if( command == "IMPRIMA" ){
             std::cout << bstree.to_string();
         }
         else if( command == "REMOVA" ){
             commandsfile>>value;
             std::cout << boolmapper[bstree.remove(value)];
-
         }
         else if( command == "INSIRA" ){
             commandsfile>>value;
@@ -90,8 +90,6 @@ void read_files( std::string tree, std::string commands ){
         }
         std::cout << std::endl;
     }
-
-    bstree.print_hierarchy();
     treefile.close();
     commandsfile.close();
 }

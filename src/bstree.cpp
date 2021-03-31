@@ -424,8 +424,6 @@ void BSTree<T>::print_hierarchy(Node<T> *root, std::string s ){
 
     print_hierarchy(root->left, s+"  ");
     std::cout << s << root->get_content();
-    std::cout << " " << root->height;
-    std::cout << " " << (root->is_complete?"true":"false");
     std::cout << std::endl;
     print_hierarchy(root->right, s+"  ");
 }
