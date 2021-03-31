@@ -18,7 +18,6 @@ class Node{
         int height = 0;
         int level = 0;
         int n_left_nodes = 0, n_right_nodes = 0;
-        int n_null_ptr = 0;
         bool is_complete = true;
         Node<T> *left=nullptr, *right=nullptr;
     public:
@@ -26,9 +25,9 @@ class Node{
         Node();
         Node(T content);
         ~Node();
-        // Methods
+        // Getters & Setters
         T get_content();
-        int update_n_null();
+        // Update parameters
         bool update_height();
         bool update_n_nodes();
         bool update_level( int level );
@@ -43,7 +42,6 @@ class BSTree{
         Node<T> *root=nullptr;
         int altura = 0;
         int size = 0;
-        
 
         // Insert, Remove & Find - Utils
         bool insert_at( const T &content, Node<T> *ptr );
@@ -58,6 +56,7 @@ class BSTree{
         void in_order(Node<T> *root);
         void pos_order(Node<T> *root);
 
+        // Print hierarchy 
         void print_hierarchy(Node<T> *root, std::string s);
 
         // Extended Methods - Overload
@@ -66,6 +65,8 @@ class BSTree{
     public:
         // Constructors & Destructors
         ~BSTree();
+
+        // Getters & Setters 
         Node<T>* get_root();
         int get_size();
 
