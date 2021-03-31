@@ -53,21 +53,31 @@ template <class T> bool Node<T>::update_level( int level ){
     return !(prev_level == level);
 }
 template <class T>
-bool Node<T>::is_full(){
-    int n_nodes = this->n_left_nodes + this->n_right_nodes+1+1;
-    bool is_power_of_2;
-    bool has_min_height;
-    float log2_result = log2( n_nodes );
-    float log2_result_floor = floor( log2_result );
+bool Node<T>::update_is_full(){
+    bool prev_is_full = this->is_full;
+    bool left_is_full, right_is_full;
+    int left_height, right_height;
 
-    // If a tree has 2 or less nodes, its always full 
-    if( n_nodes <= 2 ) return true;
+    if( this->left == nullptr ){
+        left_height = -1;
+        left_is_full = true;
+    }
+    else{
+        left_height = this->left->height;
+        left_is_full = this->left->is_full;
+    }
 
-    // check if the number of nodes+1 is a power of 2
-    is_power_of_2 = abs( log2_result_floor - log2_result ) < 0.00001;
-    // check if the tree has min height
-    has_min_height = this->height == log2_result_floor - 1;
-    return is_power_of_2 && has_min_height;
+    if( this->right == nullptr ){
+        right_height = -1;
+        right_is_full = true;
+    }
+    else{
+        right_height = this->right->height;
+        right_is_full = this->right->is_full;
+    }
+
+    this->is_full = (left_is_full && right_is_full && (left_height==right_height));
+    return this->is_full == prev_is_full;
 }
 template <class T>
 bool Node<T>::update_is_complete(){
@@ -83,7 +93,7 @@ bool Node<T>::update_is_complete(){
     }
     else{
         left_height = this->left->height;
-        left_is_full = this->left->is_full();
+        left_is_full = this->left->is_full;
         left_is_complete = this->left->is_complete;
     }
 
@@ -94,7 +104,7 @@ bool Node<T>::update_is_complete(){
     }
     else{
         right_height = this->right->height;
-        right_is_full = this->right->is_full();
+        right_is_full = this->right->is_full;
         right_is_complete = this->right->is_complete;
     }
 
@@ -357,6 +367,7 @@ void BSTree<T>::update_path( const T &content, Node<T> *ptr, int level ){
     ptr->update_height();
     ptr->update_n_nodes();
     ptr->update_level(level);
+    ptr->update_is_full();
     ptr->update_is_complete();
 
     // Update null_ptr_per_level vector
@@ -481,7 +492,7 @@ template <class T>
 bool BSTree<T>::is_full(){
     if( this->root == nullptr ) 
         return true;
-    return this->root->is_full();
+    return this->root->is_full;
 }
 //      Return a string representing the tree path by level
 template <class T>

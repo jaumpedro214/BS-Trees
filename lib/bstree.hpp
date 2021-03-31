@@ -19,6 +19,7 @@ class Node{
         int level = 0;
         int n_left_nodes = 0, n_right_nodes = 0;
         bool is_complete = true;
+        bool is_full = true;
         Node<T> *left=nullptr, *right=nullptr;
     public:
         // Constructors & Destructors
@@ -31,8 +32,8 @@ class Node{
         bool update_height();
         bool update_n_nodes();
         bool update_level( int level );
+        bool update_is_full();
         bool update_is_complete();
-        bool is_full();
 };
 
 template <class T = int> 
