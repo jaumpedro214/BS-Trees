@@ -71,6 +71,7 @@ bool Node<T>::update_is_full(){
         right_is_full = this->right->is_full;
     }
 
+    // Tree is full if the subtrees are full and have the same height
     this->is_full = (left_is_full && right_is_full && (left_height==right_height));
     return this->is_full == prev_is_full;
 }
@@ -104,11 +105,30 @@ bool Node<T>::update_is_complete(){
     }
 
     if( left_is_complete && right_is_complete ){
-        if( left_is_full || right_is_full ){
-            this->is_complete = (abs( left_height - right_height ) <= 1);
+        // If both subtrees are not full,
+        // the heights need to be the same
+        // If only one of the subtrees is full
+        // the difference between heights can be 0 or 1
+        // with the full subtree always being the lower
+        // If both subtrees are full,
+        // the difference between heights can be 0 or 1
+        if( !left_is_full && !right_is_full ){
+            this->is_complete = (left_height == right_height);
+        }
+        else if( left_is_full && !right_is_full ){
+            this->is_complete = (abs(right_height-left_height) <= 1);
+
+            if( abs(right_height-left_height) > 0 )
+                this->is_complete = this->is_complete&&(right_height>left_height);
+        }
+        else if( !left_is_full && right_is_full ){
+            this->is_complete = (abs(left_height-right_height) <= 1);
+            
+            if( abs(right_height-left_height) > 0 )
+                this->is_complete = this->is_complete&&(left_height>right_height);
         }
         else{
-            this->is_complete = (left_height == right_height);
+            this->is_complete = (abs(left_height-right_height) <= 1);
         }
     }
 
