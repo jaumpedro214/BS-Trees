@@ -99,6 +99,7 @@ int main(int argc, char *argv[]){
     std::vector<int> elems2 = {100, 50, 150, 25, 75, 125, 175, 30, 20, 80, 70, 130, 120, 180, 170};
     std::vector<std::string> elems3 = {"Ronaldo", "Maria", "Pedro" , "Joao", "Vinicius", "Ziraldo", "Samanta", "Amanda"};
     std::vector<float> elems4 = { 1, 2, 0.5, 0.25, 0.75, 4, 1.5 };
+    std::vector<int> elems5 = {100, 50, 25, 200, 150, 250, 225, 275, 125, 175};
     
     if( argc == 3 ){
         read_files( std::string(argv[1]), std::string(argv[2]) );
@@ -108,6 +109,7 @@ int main(int argc, char *argv[]){
         print_tree_info(elems2);
         print_tree_info(elems3);
         print_tree_info(elems4);
+        print_tree_info(elems5);
     }
     
     return 0;
